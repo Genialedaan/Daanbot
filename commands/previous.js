@@ -15,7 +15,7 @@ module.exports = {
 			return;
 		}
 
-        // Shuffle the current queue
+        // Check if there is a previously played song and go back to it
         if(queue.history.previousTrack){
 		    queue.history.back();
 
