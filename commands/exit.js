@@ -18,6 +18,6 @@ module.exports = {
         // Deletes all the songs from the queue and exits the channel
 		queue.delete();
 
-        await interaction.reply("Why you do this to me?")
+        await interaction.reply("I didn't want to be here anyway")
 	},
 }

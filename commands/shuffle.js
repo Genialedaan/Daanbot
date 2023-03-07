@@ -2,22 +2,22 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
 	data: new SlashCommandBuilder()
-        .setName("resume")
-        .setDescription("Resumes the current song"),
+        .setName("shuffle")
+        .setDescription("Shuffles the playlist"),
 	execute: async ({ client, interaction }) => {
         // Get the queue for the server
 		const queue = client.player.nodes.get(interaction.guildId)
 
         // Check if the queue is empty
 		if (!queue)
-        {
-            await interaction.reply("No songs in the queue");
-            return;
-        }
+		{
+			await interaction.reply("There are no songs in the queue")
+			return;
+		}
 
-        // Pause the current song
-		queue.node.resume();
+        // Shuffle the current queue
+		queue.tracks.shuffle();
 
-        await interaction.reply("Player has been resumed")
+        await interaction.reply("Queue has been shuffled")
 	},
 }
