@@ -36,6 +36,12 @@ client.player = new Player(client, {
     }
 })
 
+client.player.events.on('playerStart', (queue, track) => {
+    // we will later define queue.metadata object while creating the queue
+    const channel = queue.metadata.channel; 
+    channel.send(`🎶 | Started playing **${track.title}**`);
+});
+
 client.on("ready", () => {
     // Get all ids of the servers
     const guild_ids = client.guilds.cache.map(guild => guild.id);
@@ -70,4 +76,6 @@ client.on("interactionCreate", async interaction => {
 });
 
 client.login(process.env.TOKEN);
+
+process.on('warning', e => console.warn(e.stack));
 

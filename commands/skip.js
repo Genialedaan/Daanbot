@@ -9,7 +9,7 @@ module.exports = {
 	execute: async ({ client, interaction }) => {
 
         // Get the queue for the server
-		const queue = client.player.getQueue(interaction.guildId)
+		const queue = client.player.nodes.get(interaction.guildId)
 
         // If there is no queue, return
 		if (!queue)
@@ -18,10 +18,15 @@ module.exports = {
             return;
         }
 
-        const currentSong = queue.current
 
         // Skip the current song
-		queue.skip()
+		queue.node.skip()
+        
+        await interaction.reply("Current song has been skipped")
+        return;
+
+
+        /*const currentSong = queue.current
 
         // Get next song information to display
         const queueString = queue.tracks.slice(0, 1).map((song, i) => {
@@ -36,6 +41,6 @@ module.exports = {
                     `\n\n**Next song:**\n${queueString}`)
                     .setThumbnail(currentSong.thumbnail)
             ]
-        })
+        })*/
 	},
 }

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders")
 const { QueryType, GuildQueue } = require("discord-player")
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("play")
@@ -31,10 +30,12 @@ module.exports = {
 
         // Create a play queue for the server
 		//const queue = await client.player.createQueue(interaction.guild);
-        const queue = new GuildQueue(client.player, interaction);
+        const queue = client.player.nodes.create(interaction.guild, {
+            metadata: interaction
+        });
 
         // Wait until you are connected to the channel
-		if (!queue.connection) await queue.connect(interaction.member.voice.channel)
+		if (client.voice.adapters.size == 0) await queue.connect(interaction.member.voice.channel)
 
 		let embed = new EmbedBuilder()
 
@@ -65,11 +66,20 @@ module.exports = {
 
             // Add the track to the queue
             const song = result.tracks[0]
-            await queue.addTrack(song)
-            embed
+            try {
+                await client.player.play(interaction.member.voice.channel, song.url,{
+                nodeOptions:{
+
+                }
+            })
+                embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
                 .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Duration: ${song.duration}`})
+                .setFooter({ text: `Duration: ${song.duration}`})}
+            
+            catch (e){
+                return interaction.followUp(e)
+            }
 
 		}
         else if (interaction.options.getSubcommand() === "playlist") {
@@ -84,12 +94,22 @@ module.exports = {
             if (result.tracks.length === 0)
                 return interaction.reply(`No playlists found with ${url}`)
             
-            // Add the tracks to the queue
-            const playlist = result.playlist
-            await queue.addTracks(result.tracks)
+            const playlist = result.playlist;
+
+            try {
+                await client.player.play(interaction.member.voice.channel, playlist,{
+                nodeOptions:{
+
+                }
+            })
             embed
                 .setDescription(`**${result.tracks.length} songs from [${playlist.title}](${playlist.url})** have been added to the Queue`)
-                .setThumbnail(playlist.thumbnail)
+            }
+            
+            catch (e){
+                return interaction.followUp(e)
+            }
+         
 
 		} 
         else if (interaction.options.getSubcommand() === "search") {
@@ -101,24 +121,30 @@ module.exports = {
                 searchEngine: QueryType.AUTO
             })
 
+
             // finish if no tracks were found
             if (result.tracks.length === 0)
                 return interaction.editReply("No results")
             
             // Add the track to the queue
             const song = result.tracks[0]
-            await queue.addTrack(song)
-            embed
+
+            try {
+                await client.player.play(interaction.member.voice.channel, song.url,{
+                nodeOptions:{
+
+                }
+            })
+                embed
                 .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
                 .setThumbnail(song.thumbnail)
-                .setFooter({ text: `Duration: ${song.duration}`})
+                .setFooter({ text: `Duration: ${song.duration}`})}
+            
+            catch (e){
+                return interaction.followUp(e)
+            }
 		}
-
-        // Play the song
-        //if (!queue.isPlaying) await 
-        queue.node.play()
         
-        // Respond with the embed containing information about the player
         await interaction.reply({
             embeds: [embed]
         })
