@@ -18,6 +18,6 @@ module.exports = {
         // Pause the current song
 		queue.node.resume();
 
-        await interaction.reply("Player has been resumed.")
+        await interaction.reply("Player has been resumed")
 	},
 }

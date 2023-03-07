@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
 	data: new SlashCommandBuilder()
-        .setName("shuffle")
-        .setDescription("Shuffles the playlist"),
+        .setName("previous")
+        .setDescription("Replays previous song"),
 	execute: async ({ client, interaction }) => {
         // Get the queue for the server
 		const queue = client.player.nodes.get(interaction.guildId)
@@ -16,8 +16,13 @@ module.exports = {
 		}
 
         // Shuffle the current queue
-		queue.tracks.shuffle();
+        if(queue.history.previousTrack){
+		    queue.history.back();
 
-        await interaction.reply("Queue has been shuffled")
+            await interaction.reply("Replaying previous song")
+        }
+        else{
+            await interaction.reply("No previous song, stop trying to break the bot")
+        }
 	},
 }

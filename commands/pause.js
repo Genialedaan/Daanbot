@@ -18,6 +18,6 @@ module.exports = {
         // Pause the current song
 		queue.node.pause();
 
-        await interaction.reply("Player has been paused.")
+        await interaction.reply("Player has been paused")
 	},
 }
