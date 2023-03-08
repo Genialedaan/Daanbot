@@ -7,7 +7,7 @@ module.exports = {
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName("search")
-				.setDescription("Searches for a song and plays it")
+				.setDescription("Searches for a song on YouTube and plays it")
 				.addStringOption(option =>
 					option.setName("searchterms").setDescription("search keywords").setRequired(true)
 				)
@@ -15,13 +15,13 @@ module.exports = {
         .addSubcommand(subcommand =>
 			subcommand
 				.setName("playlist")
-				.setDescription("Plays a playlist from YT")
+				.setDescription("Plays a playlist from YouTube or Spotify")
 				.addStringOption(option => option.setName("url").setDescription("the playlist's url").setRequired(true))
 		)
 		.addSubcommand(subcommand =>
 			subcommand
 				.setName("song")
-				.setDescription("Plays a single song from YT or Spotify")
+				.setDescription("Plays a single song from YouTube, Spotify or Soundcloud")
 				.addStringOption(option => option.setName("url").setDescription("the song's url").setRequired(true))
 		),
 	execute: async ({ client, interaction }) => {
@@ -86,10 +86,20 @@ module.exports = {
 
             // Search for the playlist using the discord-player
             let url = interaction.options.getString("url")
-            const result = await client.player.search(url, {
+            let result;
+
+            if(url.includes("youtube") || url.includes("youtu.be")){
+                result = await client.player.search(url, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST
-            })
+                })
+            }
+            else if(url.includes("spotify")){
+                    result = await client.player.search(url, {
+                    requestedBy: interaction.user,
+                    searchEngine: QueryType.SPOTIFY_PLAYLIST
+                })
+            }
 
             if (result.tracks.length === 0)
                 return interaction.reply(`No playlists found with ${url}`)

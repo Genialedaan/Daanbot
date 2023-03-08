@@ -17,7 +17,7 @@ const client = new Client({
 const commands = [];
 client.commands = new Collection();
 
-const commandsPath = path.join(__dirname, "commands"); // E:\yt\discord bot\js\intro\commands
+const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 for(const file of commandFiles)
 {
@@ -32,7 +32,12 @@ for(const file of commandFiles)
 client.player = new Player(client, {
     ytdlOptions: {
         quality: "highestaudio",
-        highWaterMark: 1 << 25
+        highWaterMark: 1 << 25,
+        requestOptions: {
+            headers: {
+                cookie: process.env.YOUTUBE_COOKIE
+            }
+        }
     }
 })
 
