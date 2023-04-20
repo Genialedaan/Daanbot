@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const {REST} = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { Client, Intents, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Intents, Collection, GatewayIntentBits, ActivityType } = require('discord.js');
 const { Player } = require("discord-player")
 
 const fs = require('fs');
@@ -51,8 +51,12 @@ client.on("ready", () => {
     // Get all ids of the servers
     const guild_ids = client.guilds.cache.map(guild => guild.id);
 
-
-    const rest = new REST({version: '9'}).setToken(process.env.TOKEN);
+    client.user.setPresence({
+        activities: [{ name: `music I hope`, type: ActivityType.Playing }],
+        status: 'online',
+      });
+    
+    const rest = new REST({version: '10'}).setToken(process.env.TOKEN);
     
     for (const guildId of guild_ids)
     {
@@ -61,6 +65,8 @@ client.on("ready", () => {
         .then(() => console.log('Successfully updated commands for guild ' + guildId))
         .catch(console.error);
     }
+
+
 });
 
 client.on("interactionCreate", async interaction => {

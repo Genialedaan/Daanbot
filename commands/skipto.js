@@ -8,6 +8,8 @@ module.exports = {
         .addStringOption(option => option.setName("number").setDescription("Number in the queue").setRequired(true)),
 
 	execute: async ({ client, interaction }) => {
+        // Let the Discord Client know the bot is alive   
+        await interaction.deferReply();
 
         // Get the queue for the server
 		const queue = client.player.nodes.get(interaction.guildId)
@@ -15,7 +17,7 @@ module.exports = {
         // If there is no queue, return
 		if (!queue)
         {
-            await interaction.reply("There are no songs in the queue");
+            await interaction.editReply("There are no songs in the queue");
             return;
         }
 
@@ -28,14 +30,14 @@ module.exports = {
         if(queueSize >= number && number > 0){
 		    queue.node.skipTo(number - 1)
             if(number == 1){
-                await interaction.reply(`Bruh coulda used regular skip if ur gonna skip just one song 😒`)
+                await interaction.editReply(`Bruh coulda used regular skip if ur gonna skip just one song 😒`)
             }
             else{
-                await interaction.reply(`Skipped to song number ${number} in the queue`);
+                await interaction.editReply(`Skipped to song number ${number} in the queue`);
             }            
         }
         else{
-            await interaction.reply("I can't skip to that!")
+            await interaction.editReply("I can't skip to that!")
         }
 	},
 }

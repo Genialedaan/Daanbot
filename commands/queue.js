@@ -7,12 +7,16 @@ module.exports = {
         .setDescription("shows first 10 songs in the queue"),
 
     execute: async ({ client, interaction }) => {
+        // Let the Discord Client know the bot is alive
+        await interaction.deferReply();
+
+        // Get the queue for the server
         const queue = client.player.nodes.get(interaction.guildId)
 
         // check if there are songs in the queue
         if (!queue)
         {
-            await interaction.reply("There are no songs in the queue");
+            await interaction.editReply("There are no songs in the queue");
             return;
         }
 
@@ -24,7 +28,7 @@ module.exports = {
         // Get the current song
         const currentSong = queue.currentTrack
 
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 new EmbedBuilder()
                     .setDescription(`**Currently Playing**\n` + 

@@ -7,6 +7,8 @@ module.exports = {
         .setDescription("Skips the current song"),
 
 	execute: async ({ client, interaction }) => {
+        // Let the Discord Client know the bot is alive
+        await interaction.deferReply();
 
         // Get the queue for the server
 		const queue = client.player.nodes.get(interaction.guildId)
@@ -14,15 +16,14 @@ module.exports = {
         // If there is no queue, return
 		if (!queue)
         {
-            await interaction.reply("There are no songs in the queue");
+            await interaction.editReply("There are no songs in the queue");
             return;
         }
-
-
+        
         // Skip the current song
 		queue.node.skip()
         
-        await interaction.reply("Current song has been skipped")
+        await interaction.editReply("Current song has been skipped")
         return;
 
 

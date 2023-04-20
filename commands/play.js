@@ -25,6 +25,9 @@ module.exports = {
 				.addStringOption(option => option.setName("url").setDescription("the song's url").setRequired(true))
 		),
 	execute: async ({ client, interaction }) => {
+        // Let the Discord Client know the bot is alive
+        await interaction.deferReply();
+        
         // Make sure the user is inside a voice channel
 		if (!interaction.member.voice.channel) return interaction.reply("You need to be in a Voice Channel to play a song.");
 
@@ -37,7 +40,7 @@ module.exports = {
         // Wait until you are connected to the channel
 		if (client.voice.adapters.size == 0) await queue.connect(interaction.member.voice.channel)
 
-		let embed = new EmbedBuilder()
+		let embed = new EmbedBuilder()        
 
 		if (interaction.options.getSubcommand() === "song") {
             let url = interaction.options.getString("url")
@@ -62,7 +65,7 @@ module.exports = {
 
             // finish if no tracks were found
             if (result.tracks.length === 0)
-                return interaction.reply("No results")
+                return interaction.editReply("No results")
 
             // Add the track to the queue
             const song = result.tracks[0]
@@ -102,7 +105,7 @@ module.exports = {
             }
 
             if (result.tracks.length === 0)
-                return interaction.reply(`No playlists found with ${url}`)
+                return interaction.editReply(`No playlists found with ${url}`)
             
             const playlist = result.playlist;
 
@@ -122,8 +125,7 @@ module.exports = {
          
 
 		} 
-        else if (interaction.options.getSubcommand() === "search") {
-
+        else if (interaction.options.getSubcommand() === "search") {            
             // Search for the song using the discord-player
             let url = interaction.options.getString("searchterms")
             const result = await client.player.search(url, {
@@ -155,7 +157,7 @@ module.exports = {
             }
 		}
         
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [embed]
         })
 	},
