@@ -29,7 +29,7 @@ module.exports = {
         await interaction.deferReply();
         
         // Make sure the user is inside a voice channel
-		if (!interaction.member.voice.channel) return interaction.reply("You need to be in a Voice Channel to play a song.");
+		if (!interaction.member.voice.channel) return interaction.editReply("You need to be in a Voice Channel to play a song.");
 
         // Create a play queue for the server
 		//const queue = await client.player.createQueue(interaction.guild);

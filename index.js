@@ -82,7 +82,7 @@ client.on("interactionCreate", async interaction => {
     catch(error)
     {
         console.error(error);
-        await interaction.reply({content: "There was an error executing this command"});
+        await interaction.editReply({content: "There was an error executing this command"});
     }
 });
 
